@@ -1,7 +1,15 @@
 'use client'
 
 import React, {RefObject, useEffect, useRef, useState} from "react";
-import {Play, RotateCcw} from 'lucide-react';
+import {Pause, Play, RotateCcw} from 'lucide-react';
+
+
+type StopwatchStatus = "idle" | "running" | "paused"
+type StopwatchActionByStatus = {
+    "idle": () => void,
+    "running": () => void,
+    "paused": () => void,
+}
 
 function timeFormatter(totalSeconds: number) {
     const hours: number = Math.floor(totalSeconds / 3600);
@@ -17,7 +25,9 @@ function timeFormatter(totalSeconds: number) {
 
 function Stopwatch() {
 
+
     const [totalSeconds, setTotalSeconds] = useState(0)
+    const [status, setStatus] = useState<StopwatchStatus>("idle");
     const timerRef: RefObject<number | null> = useRef<number>(null)
     const buttonReference: RefObject<HTMLButtonElement | null> = useRef<HTMLButtonElement>(null)
 
@@ -30,15 +40,42 @@ function Stopwatch() {
 
                 }, 1000)
 
+            setStatus("running");
+
         }
         return;
     }
+
+    function pauseStopwatch(): void {
+        if (timerRef.current !== null) {
+            clearInterval(timerRef.current)
+            setStatus("paused");
+        }
+    }
+
+    function resumeStopwatch(): void {
+        if (status === "paused") {
+            timerRef.current = window.setInterval(() => setTotalSeconds(prev => prev + 1), 1000);
+        }
+        setStatus("running");
+    }
+
+    const actions: StopwatchActionByStatus = {
+        'idle': () => {
+            startWatch();
+        },
+        'running': () => {
+            pauseStopwatch();
+        },
+        'paused': () => {
+            resumeStopwatch();
+        }
+    };
 
     // "Gancho" para o react saber quando o componente foi renderizado na tela
     useEffect(() => {
         buttonReference.current?.focus()
     }, []);
-
 
     return (
         <div className="flex flex-col items-center gap-8">
@@ -52,11 +89,23 @@ function Stopwatch() {
             <div className="flex gap-4">
                 {/* Botão Iniciar - Flexbox para alinhar ícone + texto */}
                 <button
-                    onClick={startWatch}
+                    onClick={actions[status]}
                     className="flex items-center gap-2 min-w-[140px] justify-center rounded-full border border-white/20 bg-white px-6 py-3 text-sm font-semibold text-black transition-all hover:bg-neutral-200 active:scale-95"
                 >
-                    <Play size={18} strokeWidth={2} fill="currentColor"/>
-                    <span>Iniciar</span>
+                    {status === "idle" ? (
+                        <>
+                            <Play size={18} strokeWidth={2} fill="currentColor"/>
+                            <span>Iniciar</span>
+                        </>
+                    ) : status === "running" ?
+                        <>
+                            <Pause size={18} strokeWidth={2} fill="currentColor"/>
+                            <span>Pausar</span>
+                        </> : <>
+                            <Play size={18} strokeWidth={2} fill="currentColor"/>
+                            <span>Continuar</span>
+                        </>}
+
                 </button>
 
                 {/* Botão Resetar - Variante Outline */}
