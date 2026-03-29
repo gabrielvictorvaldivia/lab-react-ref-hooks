@@ -9,6 +9,8 @@
 
 Você vai construir um **cronômetro** com as funções iniciar, pausar e resetar. O desafio exige que você use `useRef` para guardar o ID do intervalo — sem causar re-renders desnecessários — e também para dar **foco automático** no botão "Iniciar" quando o componente montar.
 
+![Descrição do GIF](./app-capture.gif)
+
 ---
 
 ## 🎯 Requisitos
