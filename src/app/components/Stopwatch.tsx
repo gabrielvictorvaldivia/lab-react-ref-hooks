@@ -32,7 +32,7 @@ function Stopwatch() {
     const buttonReference: RefObject<HTMLButtonElement | null> = useRef<HTMLButtonElement>(null)
 
     function startWatch(): void {
-        if (timerRef.current == null) {
+        if (timerRef.current === null) {
             timerRef.current = window.setInterval(
                 () => {
                     // console.log(timeFormatter(totalSeconds))
@@ -58,6 +58,15 @@ function Stopwatch() {
             timerRef.current = window.setInterval(() => setTotalSeconds(prev => prev + 1), 1000);
         }
         setStatus("running");
+    }
+
+    function resetStopwatch(): void {
+        if (timerRef.current !== null) {
+            clearInterval(timerRef.current)
+            setTotalSeconds(0)
+            timerRef.current = null
+            setStatus("idle");
+        }
     }
 
     const actions: StopwatchActionByStatus = {
@@ -110,6 +119,7 @@ function Stopwatch() {
 
                 {/* Botão Resetar - Variante Outline */}
                 <button
+                    onClick={resetStopwatch}
                     className="flex items-center gap-2 min-w-[140px] justify-center rounded-full border border-white/20 bg-transparent px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10 active:scale-95"
                 >
                     <RotateCcw size={18} strokeWidth={2}/>
