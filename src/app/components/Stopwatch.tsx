@@ -17,7 +17,7 @@ function timeFormatter(totalSeconds: number) {
 
 function Stopwatch() {
 
-    let [totalSeconds, setTotalSeconds] = useState(0)
+    const [totalSeconds, setTotalSeconds] = useState(0)
     const timerRef: RefObject<number | null> = useRef<number>(null)
     const buttonReference: RefObject<HTMLButtonElement | null> = useRef<HTMLButtonElement>(null)
 
@@ -26,7 +26,7 @@ function Stopwatch() {
             timerRef.current = window.setInterval(
                 () => {
                     // console.log(timeFormatter(totalSeconds))
-                    setTotalSeconds(totalSeconds++)
+                    setTotalSeconds(prev => prev + 1)
 
                 }, 1000)
 
