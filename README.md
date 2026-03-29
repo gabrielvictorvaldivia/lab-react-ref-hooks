@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Desafio — `useRef`
 
-## Getting Started
+> **Categoria:** Referência  
+> **Função principal:** Mantém valores entre renders sem disparar novo render.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📋 Contexto
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Você vai construir um **cronômetro** com as funções iniciar, pausar e resetar. O desafio exige que você use `useRef` para guardar o ID do intervalo — sem causar re-renders desnecessários — e também para dar **foco automático** no botão "Iniciar" quando o componente montar.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 Requisitos
 
-## Learn More
+1. Exiba o tempo no formato `MM:SS` (ex: `01:43`).
+2. Implemente os botões **Iniciar**, **Pausar** e **Resetar**.
+3. Use `useRef` para armazenar o `intervalId` retornado pelo `setInterval`.
+4. Ao montar o componente, o botão "Iniciar" deve receber **foco automático** (use `useRef` + `.focus()`).
+5. Ao clicar em **Resetar**, o cronômetro para e volta a `00:00`.
+6. Não deve ser possível criar múltiplos intervalos clicando em "Iniciar" várias vezes.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ⚙️ Restrições
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- O `intervalId` **não pode** ser guardado em `useState` (causaria re-render desnecessário).
+- Use `useRef` para o `intervalId` e `useState` apenas para o tempo exibido.
+- Limpe o intervalo corretamente no cleanup ou no pause/reset.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 💡 Dicas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `useRef` retorna um objeto `{ current: valor }` que persiste entre renders.
+- Alterar `ref.current` **não** causa re-render — é exatamente o que você quer para o intervalo.
+- Para o foco automático, crie uma ref apontando para o elemento DOM do botão e chame `ref.current.focus()` dentro de um `useEffect` com array vazio `[]`.
+
+---
+
+## ✅ Critérios de Conclusão
+
+- [ ] O cronômetro conta corretamente em segundos.
+- [ ] Pausar e retomar funciona sem reiniciar a contagem.
+- [ ] Clicar em "Iniciar" múltiplas vezes não acelera o cronômetro.
+- [ ] O botão "Iniciar" está focado automaticamente ao montar.
+- [ ] Nenhum `intervalId` é guardado em `useState`.
